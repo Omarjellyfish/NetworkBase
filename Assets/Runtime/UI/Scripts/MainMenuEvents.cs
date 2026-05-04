@@ -9,7 +9,6 @@ namespace NetworkBaseRuntime
         private void OnEnable()
         {
             _document = GetComponent<UIDocument>();
-            // Use the name exactly as it appears in your Hierarchy image
             var startButton = _document.rootVisualElement.Q<Button>("Btn_StartGame");
 
             if (startButton != null)
@@ -21,7 +20,7 @@ namespace NetworkBaseRuntime
 /*        private void OnDisable()
         {
             Debug.Log("MainMenuEvents OnDisable called, unsubscribing from events.");
-            // Good practice to unsubscribe to avoid memory leaks
+            
             var startButton = _document.rootVisualElement.Q<Button>("Btn_StartGame");
             if (startButton != null)
             {
