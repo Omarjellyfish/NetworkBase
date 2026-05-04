@@ -1,0 +1,19 @@
+{
+    "name": "Project.Editor",
+    "rootNamespace": "NetworkBaseEditor",
+    "references": [
+        "GUID:ab8c2838da9c9ba429877a6673a62ff7",
+        "GUID:e81c398f04903ad478bc335ea307b5a7"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

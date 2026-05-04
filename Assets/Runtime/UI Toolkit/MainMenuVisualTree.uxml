@@ -1,0 +1,17 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Runtime/UI%20Toolkit/USS/MainMenuStyle.uss?fileID=7433441132597879392&amp;guid=db8e06c67569f7041832dc4748fbb8a9&amp;type=3#MainMenuStyle"/>
+    <ui:VisualElement name="MainContainer" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/TextMesh%20Pro/Examples%20&amp;%20Extras/Textures/Sunny%20Days%20-%20Seamless.jpg?fileID=2800000&amp;guid=17c350171f7a3ca479f830547c66d187&amp;type=3#Sunny Days - Seamless&quot;);">
+        <ui:VisualElement name="Header" tabindex="-1" class="header">
+            <ui:Label text="This is a header"/>
+            <ui:Label text="still a header bro"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="Body" tabindex="-1" class="body">
+            <ui:VisualElement name="MenuButtonsContainer" class="menu-button-container" style="flex-grow: 1;">
+                <ui:Button text="Start Game" name="Btn_StartGame" class="button"/>
+                <ui:Button text="Options" name="Btn_Options" class="button"/>
+                <ui:Button text="Quit&#10;" name="Btn_Quit" class="button"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="Footer" class="footer"/>
+    </ui:VisualElement>
+</ui:UXML>

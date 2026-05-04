@@ -1,0 +1,16 @@
+{
+    "name": "Project.Network",
+    "rootNamespace": "NetworkBaseNetwork",
+    "references": [
+        ""
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
