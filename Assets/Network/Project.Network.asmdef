@@ -2,7 +2,9 @@
     "name": "Project.Network",
     "rootNamespace": "NetworkBaseNetwork",
     "references": [
-        ""
+        "Unity.Services.Authentication",
+        "Unity.Services.Core",
+        "Unity.Services.Multiplayer"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

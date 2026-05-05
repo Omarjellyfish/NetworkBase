@@ -1,0 +1,52 @@
+.header {
+    font-size: 24px;
+    -unity-font-style: bold; /* Changed for Unity */
+    height: 10%;
+    flex-shrink: 0;
+}
+
+.body {
+    flex-grow: 1;
+    flex-shrink: 1; 
+}
+
+.footer {
+      height: 5%;
+      flex-shrink: 0;
+}
+
+.button {
+    width: 80%;
+    max-width: 200px;
+    height: 50px;
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #007BFF;
+    color: white;
+    border-width: 0;
+    border-radius: 5px;
+
+    /* 1. Put the transition on the base class so it animates both ways */
+    /* 2. Target the 'scale' property, not 'transform' */
+    transition: background-color 0.3s ease, scale 0.3s ease; 
+}
+
+.button:hover {
+    background-color: #0056b3;
+
+    /* 3. Use Unity's standalone scale property */
+    scale: 1.1; 
+}
+
+.button:active {
+    background-color: #004080;
+    scale: 0.95; 
+    transition: background-color 0.1s ease, scale 0.1s ease;
+}
+.menu-button-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    justify-content: center;
+}
