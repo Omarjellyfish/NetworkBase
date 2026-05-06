@@ -7,9 +7,21 @@
         </ui:VisualElement>
         <ui:VisualElement name="Body" tabindex="-1" class="body">
             <ui:VisualElement name="MenuButtonsContainer" class="menu-button-container" style="flex-grow: 1;">
-                <ui:Button text="Start Game" name="Btn_StartGame" class="button"/>
+                <ui:Button text="Start Host" name="Btn_HostGame" class="button"/>
+                <ui:Button text="Server List" name="Btn_OpenBrowser" class="button"/>
+                <ui:VisualElement name="JoinWithCodeContainer" style="flex-direction: row; justify-content: flex-start; align-items: flex-start;">
+                    <ui:Button text="Join With Code" name="Btn_JoinByCode" class="button"/>
+                    <ui:TextField name="Input_JoinCode" class="text-field"/>
+                </ui:VisualElement>
+                <ui:Button text="QuickJoin" name="Btn_QuickJoin" class="button"/>
                 <ui:Button text="Options" name="Btn_Options" class="button"/>
                 <ui:Button text="Quit&#10;" name="Btn_Quit" class="button"/>
+            </ui:VisualElement>
+            <ui:VisualElement name="ServerListOverlay" class="server-list-container" style="flex-grow: 1;">
+                <ui:Label text="Available Lobbies" name="Avail_Lobbies" style="font-size: 32px;"/>
+                <ui:Button text="Close Server List" name="Btn_CloseBrowser" class="button" style="position: absolute; left: 80%; top: 2%;"/>
+                <ui:ScrollView name="LobbyListContainer" style="flex-grow: 1; width: 70%; height: 70%;"/>
+                <ui:Button text="Refresh list" name="Btn_RefreshLobbies"/>
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="Footer" class="footer"/>
