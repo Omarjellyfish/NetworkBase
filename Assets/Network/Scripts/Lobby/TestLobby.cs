@@ -32,6 +32,36 @@ namespace NetworkBaseNetwork
             HandleLobbyHeartbeat();
         }
 
+
+        private async void HandlePollUpdates()
+        {
+            if (hostedLobby != null)
+            {
+                try
+                {
+                    Lobby updatedLobby = await LobbyService.Instance.GetLobbyAsync(hostedLobby.Id);
+                    hostedLobby = updatedLobby;
+                    // Here you can also check for specific changes, like player list updates, and react accordingly.
+                }
+                catch (LobbyServiceException e)
+                {
+                    Debug.LogError("Failed to poll lobby updates: " + e.Message);
+                }
+            }
+        }
+
+
+        private async void MigrateLobbyHost()
+        {
+            try
+            {
+                hostedLobby = await LobbyService.Instance.UpdateLobbyAsync(hostedLobby.Id, new UpdateLobbyOptions { HostId = hostedLobby.Players[1].Id });
+            }
+            catch(LobbyServiceException e)
+            {
+                Debug.LogError("Failed to migrate lobby host: " + e.Message);
+            }
+        }
         private async void HandleLobbyHeartbeat()
         {
             if (hostedLobby != null)
@@ -106,6 +136,12 @@ namespace NetworkBaseNetwork
 
                 QueryResponse response = await LobbyService.Instance.QueryLobbiesAsync(options);
                 Debug.Log("Lobbies found: " + response.Results.Count);
+
+                Debug.Log("Lobbies:");
+                foreach (var lobby in response.Results)
+                {
+                    Debug.Log("Lobby Name: " + lobby.Name + ", Lobby Code: " + lobby.LobbyCode);
+                }
                 return response.Results;
             }
             catch (LobbyServiceException e)
@@ -125,7 +161,7 @@ namespace NetworkBaseNetwork
 
             try
             {
-                CreateLobbyOptions clo = new CreateLobbyOptions { IsPrivate = isPrivate };
+                CreateLobbyOptions clo = new CreateLobbyOptions { IsPrivate = isPrivate};
                 hostedLobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, MaxPlayerCount, clo);
 
                 Debug.Log("Successfully created Lobby: " + hostedLobby.Name + " Lobby Code: " + hostedLobby.LobbyCode);
@@ -178,6 +214,32 @@ namespace NetworkBaseNetwork
                 {
                     Debug.Log(e);
                 }
+            }
+        }
+        private async void KickPlayer(string playerId)
+        {
+            if (hostedLobby != null)
+            {
+                try
+                {
+                    await LobbyService.Instance.RemovePlayerAsync(hostedLobby.Id, playerId);
+                    Debug.Log("Player kicked successfully.");
+                }
+                catch (LobbyServiceException e)
+                {
+                    Debug.Log(e);
+                }
+            }
+        }
+        private async void LeaveLobby()
+        {
+            try
+            {
+                await LobbyService.Instance.RemovePlayerAsync(hostedLobby.Id, AuthenticationService.Instance.PlayerId);
+            }
+            catch (LobbyServiceException e)
+            {
+                Debug.Log(e);
             }
         }
     }
