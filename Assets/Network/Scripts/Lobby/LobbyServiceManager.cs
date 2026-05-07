@@ -83,58 +83,63 @@ namespace NetworkBaseNetwork
 
         private async void HandleLobbyPolling()
         {
-            if (JoinedLobby != null)
+            if (JoinedLobby == null || string.IsNullOrEmpty(JoinedLobby.Id)) return;
+
+            lobbyPollTimer += Time.deltaTime;
+            if (lobbyPollTimer < lobbyPollInterval) return;
+
+            lobbyPollTimer = 0f;
+
+            // 1. Capture the ID locally so it can't change mid-execution
+            string lobbyIdToPoll = JoinedLobby.Id;
+
+            try
             {
-                lobbyPollTimer += Time.deltaTime;
-                if (lobbyPollTimer >= lobbyPollInterval)
+                Lobby lobby = await LobbyService.Instance.GetLobbyAsync(lobbyIdToPoll);
+
+                // 2. CRITICAL: Check if we are STILL in a lobby after the await.
+                // If the user clicked "Leave" while the network was thinking, JoinedLobby is now null.
+                if (JoinedLobby == null) return;
+
+                // make sure I'm still in the lobby list returned by the server
+                bool isPlayerStillInLobby = false;
+                if (lobby.Players != null)
                 {
-                    lobbyPollTimer = 0f;
-
-                    string lobbyIdToPoll = JoinedLobby.Id;
-                    if (string.IsNullOrEmpty(lobbyIdToPoll)) return;
-
-                    try
+                    foreach (Player player in lobby.Players)
                     {
-                        Lobby lobby = await LobbyService.Instance.GetLobbyAsync(lobbyIdToPoll);
-
-                        if (JoinedLobby != null && JoinedLobby.Id == lobby.Id)
+                        if (player.Id == AuthenticationService.Instance.PlayerId)
                         {
-                            //make sure I'm still in the lobby, if not, I've been kicked or the lobby was deleted
-                            bool isPlayerStillInLobby = false;
-                            foreach (Player player in lobby.Players)
-                            {
-                                if (player.Id == AuthenticationService.Instance.PlayerId)
-                                {
-                                    isPlayerStillInLobby = true;
-                                    break;
-                                }
-                            }
-
-                            if (!isPlayerStillInLobby)
-                            {
-                                Debug.Log("I have been kicked from the lobby!");
-                                JoinedLobby = null; // Clear the lobby
-                                OnLeftLobby?.Invoke(); // Trigger your UI to go back to the Main Menu
-
-                                // If connected to Netcode, disconnect here too! (e.g., NetworkManager.Singleton.Shutdown())
-                                return;
-                            }
-                            // --------------------------------
-
-                            JoinedLobby = lobby;
-                            OnLobbyUpdated?.Invoke(JoinedLobby);
+                            isPlayerStillInLobby = true;
+                            break;
                         }
                     }
-                    catch (LobbyServiceException e)
-                    {
-                        Debug.LogWarning($"Error polling lobby: {e.Message}");
-                    }
-                    catch (Exception e)
-                    {
-
-                        Debug.LogError($"Unexpected error during lobby poll: {e.Message}");
-                    }
                 }
+
+                if (!isPlayerStillInLobby)
+                {
+                    Debug.Log("I have been kicked or lobby closed!");
+                    JoinedLobby = null;
+                    HostedLobby = null; // Clear host ref too if applicable
+                    OnLeftLobby?.Invoke();
+                    return;
+                }
+
+                JoinedLobby = lobby;
+                OnLobbyUpdated?.Invoke(JoinedLobby);
+            }
+            catch (LobbyServiceException e)
+            {
+                // If the lobby is not found (404), it means it was deleted
+                if (e.Reason == LobbyExceptionReason.LobbyNotFound)
+                {
+                    JoinedLobby = null;
+                    OnLeftLobby?.Invoke();
+                }
+                Debug.LogWarning($"Lobby Service Error: {e.Message}");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Polling Error: {e.Message}");
             }
         }
         public void StopPolling()
@@ -229,7 +234,19 @@ namespace NetworkBaseNetwork
                 }
             }
         }
-
+        public async Task QuickJoinLobby()
+        {
+            try
+            {
+                JoinedLobby = await LobbyService.Instance.QuickJoinLobbyAsync();
+                Debug.Log($"Successfully quick joined Lobby: {JoinedLobby.Name} with Code: {JoinedLobby.LobbyCode}");
+                OnLobbyJoined?.Invoke(JoinedLobby);
+            }
+            catch (LobbyServiceException e)
+            {
+                Debug.LogError($"Failed to quick join lobby: {e.Message}");
+            }
+        }
         public async Task JoinLobbyByCode(string lobbyCode)
         {
             try

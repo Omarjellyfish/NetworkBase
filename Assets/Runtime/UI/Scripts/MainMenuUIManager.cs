@@ -3,6 +3,7 @@ using UnityEngine.UIElements;
 using Unity.Services.Lobbies.Models;
 using System.Collections.Generic;
 using NetworkBaseNetwork;
+using System;
 
 namespace NetworkBaseRuntime
 {
@@ -19,12 +20,15 @@ namespace NetworkBaseRuntime
         // Overlay and Join Code Elements
         private Button _btnOpenBrowser;
         private Button _btnCloseBrowser;
+        private Button _btnQuickJoin;
         private VisualElement _serverBrowserOverlay;
         private TextField _joinCodeInput;
         private Button _btnJoinByCode;
 
         private void OnEnable()
         {
+
+            // Get references to UI elements
             _document = GetComponent<UIDocument>();
 
             _btnHost = _document.rootVisualElement.Q<Button>("Btn_HostGame");
@@ -37,7 +41,11 @@ namespace NetworkBaseRuntime
 
             _joinCodeInput = _document.rootVisualElement.Q<TextField>("Input_JoinCode");
             _btnJoinByCode = _document.rootVisualElement.Q<Button>("Btn_JoinByCode");
+            _btnQuickJoin=_document.rootVisualElement.Q<Button>("Btn_QuickJoin");
 
+
+
+            // event subscriptions
             if (_serverBrowserOverlay != null)
             {
                 _serverBrowserOverlay.style.display = DisplayStyle.None;
@@ -49,9 +57,12 @@ namespace NetworkBaseRuntime
             if (_btnOpenBrowser != null) _btnOpenBrowser.clicked += OpenBrowserOverlay;
             if (_btnCloseBrowser != null) _btnCloseBrowser.clicked += CloseBrowserOverlay;
             if (_btnJoinByCode != null) _btnJoinByCode.clicked += OnJoinByCodeClicked;
+            if (_btnQuickJoin != null) _btnQuickJoin.clicked += OnQuickJoinClicked;
 
             LobbyServiceManager.OnLobbyListUpdated += DrawLobbyList;
         }
+
+
 
         private void OnDisable()
         {
@@ -107,6 +118,19 @@ namespace NetworkBaseRuntime
                 await LobbyServiceManager.Singleton.JoinLobbyByCode(_joinCodeInput.value);
 
                 _btnJoinByCode.SetEnabled(true);
+            }
+        }
+
+        private void OnQuickJoinClicked()
+        {
+            if(_btnQuickJoin != null)
+            {
+                _btnQuickJoin.SetEnabled(false);
+                Debug.Log("UI====> Attempting Quick Join...");
+                LobbyServiceManager.Singleton.QuickJoinLobby().ContinueWith(_ =>
+                {
+                    _btnQuickJoin.SetEnabled(true);
+                });
             }
         }
 
