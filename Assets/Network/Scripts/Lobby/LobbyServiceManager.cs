@@ -23,14 +23,16 @@ namespace NetworkBaseNetwork
         private float lobbyPollTimer;
         private readonly float lobbyPollInterval = 1.1f;
 
-        // --- EVENTS FOR THE UI TO LISTEN TO ---
+        // --- EVENTS LISTEN TO ---
         public static event Action<Lobby> OnLobbyCreated;
         public static event Action<Lobby> OnLobbyJoined;
         public static event Action<List<Lobby>> OnLobbyListUpdated;
         public static event Action<Lobby> OnLobbyUpdated; 
         public static event Action OnLeftLobby;
+        public static event Action<string> OnPlayerKicked;
 
-        private async void Awake()
+        private bool isInitialized = false;
+        private void Awake() 
         {
             if (Singleton != null && Singleton != this)
             {
@@ -39,8 +41,13 @@ namespace NetworkBaseNetwork
             }
             Singleton = this;
             DontDestroyOnLoad(gameObject);
+        }
 
+        private async void Start()
+        {
             await InitializeUnityServices();
+
+            isInitialized = true;
         }
 
         private async Task InitializeUnityServices()
@@ -55,6 +62,8 @@ namespace NetworkBaseNetwork
 
         private void Update()
         {
+            if (!isInitialized) return;
+
             HandleLobbyHeartbeat();
             HandleLobbyPolling();
         }
@@ -80,18 +89,57 @@ namespace NetworkBaseNetwork
                 if (lobbyPollTimer >= lobbyPollInterval)
                 {
                     lobbyPollTimer = 0f;
+
+                    string lobbyIdToPoll = JoinedLobby.Id;
+                    if (string.IsNullOrEmpty(lobbyIdToPoll)) return;
+
                     try
                     {
-                        Lobby lobby = await LobbyService.Instance.GetLobbyAsync(JoinedLobby.Id);
-                        JoinedLobby = lobby;
-                        OnLobbyUpdated?.Invoke(JoinedLobby); 
+                        Lobby lobby = await LobbyService.Instance.GetLobbyAsync(lobbyIdToPoll);
+
+                        if (JoinedLobby != null && JoinedLobby.Id == lobby.Id)
+                        {
+                            //make sure I'm still in the lobby, if not, I've been kicked or the lobby was deleted
+                            bool isPlayerStillInLobby = false;
+                            foreach (Player player in lobby.Players)
+                            {
+                                if (player.Id == AuthenticationService.Instance.PlayerId)
+                                {
+                                    isPlayerStillInLobby = true;
+                                    break;
+                                }
+                            }
+
+                            if (!isPlayerStillInLobby)
+                            {
+                                Debug.Log("I have been kicked from the lobby!");
+                                JoinedLobby = null; // Clear the lobby
+                                OnLeftLobby?.Invoke(); // Trigger your UI to go back to the Main Menu
+
+                                // If connected to Netcode, disconnect here too! (e.g., NetworkManager.Singleton.Shutdown())
+                                return;
+                            }
+                            // --------------------------------
+
+                            JoinedLobby = lobby;
+                            OnLobbyUpdated?.Invoke(JoinedLobby);
+                        }
                     }
                     catch (LobbyServiceException e)
                     {
-                        Debug.LogError($"Error polling lobby: {e.Message}");
+                        Debug.LogWarning($"Error polling lobby: {e.Message}");
+                    }
+                    catch (Exception e)
+                    {
+
+                        Debug.LogError($"Unexpected error during lobby poll: {e.Message}");
                     }
                 }
             }
+        }
+        public void StopPolling()
+        {
+            JoinedLobby = null;
         }
 
         public async Task CreateLobby(string lobbyName, int maxPlayers, bool isPrivate)
@@ -154,6 +202,7 @@ namespace NetworkBaseNetwork
                 try
                 {
                     await LobbyService.Instance.RemovePlayerAsync(HostedLobby.Id, playerId);
+                    OnPlayerKicked?.Invoke(playerId);
                     Debug.Log("Player kicked successfully.");
                 }
                 catch (LobbyServiceException e)
@@ -206,7 +255,6 @@ namespace NetworkBaseNetwork
                     HostedLobby = null;
                     JoinedLobby = null;
 
-                    // Trigger the event so the UI knows to transition back to the Main Menu
                     OnLeftLobby?.Invoke();
                 }
                 catch (LobbyServiceException e)

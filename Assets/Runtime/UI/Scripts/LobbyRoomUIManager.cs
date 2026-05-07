@@ -32,6 +32,24 @@ namespace NetworkBaseRuntime
             {
                 _startGameButton.clicked += OnStartGameClicked;
             }
+            if(LobbyServiceManager.Singleton.HostedLobby != null)
+            {
+                RefreshPlayerList(LobbyServiceManager.Singleton.HostedLobby);
+            }
+            else if(LobbyServiceManager.Singleton.JoinedLobby != null)
+            {
+                RefreshPlayerList(LobbyServiceManager.Singleton.JoinedLobby);
+            }
+
+            if(LobbyServiceManager.Singleton.JoinedLobby.HostId == LobbyServiceManager.Singleton.LocalPlayerId)
+            {
+                _startGameButton.style.display = DisplayStyle.Flex;
+            }
+            else
+            {
+                _startGameButton.style.display = DisplayStyle.None;
+            }
+
 
             LobbyServiceManager.OnLobbyUpdated += RefreshPlayerList;
             LobbyServiceManager.OnLeftLobby += HandleLeftLobby;
