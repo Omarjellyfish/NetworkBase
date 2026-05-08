@@ -4,7 +4,6 @@ using UnityEngine.SceneManagement;
 
 namespace NetworkBaseRuntime
 {
-    // Notice it inherits from MonoBehaviour, so the Inspector works perfectly!
     public class MyNetworkManager : MonoBehaviour
     {
         [Header("Scene Management")]
@@ -15,6 +14,7 @@ namespace NetworkBaseRuntime
             if (NetworkManager.Singleton != null)
             {
                 NetworkManager.Singleton.OnServerStarted += ServerHasStarted;
+                NetworkManager.Singleton.ConnectionApprovalCallback = ApprovalCheck;
             }
         }
 
@@ -23,9 +23,16 @@ namespace NetworkBaseRuntime
             if (NetworkManager.Singleton != null)
             {
                 NetworkManager.Singleton.OnServerStarted -= ServerHasStarted;
+                NetworkManager.Singleton.ConnectionApprovalCallback -= ApprovalCheck;
             }
         }
 
+
+        private void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
+        {
+            response.Approved = true;
+            response.CreatePlayerObject = false;
+        }
         private void ServerHasStarted()
         {
             NetworkManager.Singleton.SceneManager.LoadScene(targetSceneName, LoadSceneMode.Single);
