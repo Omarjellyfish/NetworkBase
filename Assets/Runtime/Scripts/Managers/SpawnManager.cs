@@ -9,7 +9,6 @@ namespace NetworkBaseRuntime
             if (NetworkManager.Singleton.IsServer)
             {
                 GameObject playerInstance = Instantiate(playerPrefab);
-                NetworkManager.Singleton.SpawnManager.Spawn(playerInstance, clientId);
             }
         }
     }
