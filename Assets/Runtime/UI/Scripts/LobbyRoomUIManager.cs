@@ -85,13 +85,11 @@ namespace NetworkBaseRuntime
                 _startGameButton.style.display = iAmHost ? DisplayStyle.Flex : DisplayStyle.None;
             }
 
-            // Loop through all players in the lobby data
             foreach (Player player in currentLobby.Players)
             {
                 VisualElement playerRow = new VisualElement();
-                playerRow.style.flexDirection = FlexDirection.Row;
-                playerRow.style.justifyContent = Justify.SpaceBetween;
-                playerRow.style.paddingBottom = 5;
+                // Apply the USS class to the row
+                playerRow.AddToClassList("player-item");
 
                 Label nameLabel = new Label();
                 nameLabel.text = player.Id == localId ? "Player (Me)" : $"Player ({player.Id.Substring(0, 5)})";
@@ -101,7 +99,6 @@ namespace NetworkBaseRuntime
                 {
                     Button kickButton = new Button();
                     kickButton.text = "Kick";
-                    kickButton.style.backgroundColor = new StyleColor(Color.red);
 
                     string playerToKick = player.Id;
                     kickButton.clicked += async () =>

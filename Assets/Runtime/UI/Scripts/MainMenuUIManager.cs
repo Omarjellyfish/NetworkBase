@@ -44,13 +44,7 @@ namespace NetworkBaseRuntime
             _btnQuickJoin=_document.rootVisualElement.Q<Button>("Btn_QuickJoin");
 
 
-
             // event subscriptions
-            if (_serverBrowserOverlay != null)
-            {
-                _serverBrowserOverlay.style.display = DisplayStyle.None;
-            }
-
             if (_btnHost != null) _btnHost.clicked += OnHostClicked;
             if (_btnRefresh != null) _btnRefresh.clicked += OnRefreshClicked;
 
@@ -76,6 +70,16 @@ namespace NetworkBaseRuntime
             LobbyServiceManager.OnLobbyListUpdated -= DrawLobbyList;
         }
 
+        private void Start()
+        {
+            Debug.Log("UI====> Main Menu UI Initialized.");
+            Debug.Log("UI====> Hiding Server Browser Overlay on Start.");
+            if (_serverBrowserOverlay != null)
+            {
+                _serverBrowserOverlay.style.display = DisplayStyle.None; 
+            }
+            Debug.Log(_serverBrowserOverlay != null ? "UI====> Server Browser Overlay reference is valid." : "UI====> Server Browser Overlay reference is NULL.");
+        }
         private async void OnHostClicked()
         {
             Debug.Log("UI====> Requesting to Host a Lobby...");
@@ -149,9 +153,8 @@ namespace NetworkBaseRuntime
             foreach (Lobby lobby in lobbies)
             {
                 VisualElement row = new VisualElement();
-                row.style.flexDirection = FlexDirection.Row;
-                row.style.justifyContent = Justify.SpaceBetween;
-                row.style.paddingBottom = 10;
+                // IMPORTANT: Add the USS class to the row
+                row.AddToClassList("lobby-item");
 
                 Label nameLabel = new Label($"{lobby.Name} ({lobby.Players.Count}/{lobby.MaxPlayers})");
                 row.Add(nameLabel);
