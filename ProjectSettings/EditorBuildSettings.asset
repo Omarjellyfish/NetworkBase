@@ -24,5 +24,5 @@ EditorBuildSettings:
     path: Assets/Scenes/FlowScenes/TheGame.unity
     guid: 027c692b7b952214c9584149810ea542
   m_configObjects:
-    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 954e5841c3cd41c40811a740f646df89, type: 3}
   m_UseUCBPForAssetBundles: 0

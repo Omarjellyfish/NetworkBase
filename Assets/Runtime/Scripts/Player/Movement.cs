@@ -21,11 +21,14 @@ namespace NetworkBaseRuntime
         [SerializeField] private float groundCheckDistance = 0.1f;
         [SerializeField] private LayerMask groundLayer;
         [SerializeField] private bool isGrounded;
+        [SerializeField] private Transform groundCheckPoint;
 
         [Header("Wall Check Attributes")]
         [SerializeField] private bool isWall;
         [SerializeField] private float wallCheckDistance = 0.1f;
         [SerializeField] private LayerMask wallLayer;
+        [SerializeField] private bool isWallRunning;
+        [SerializeField] private Transform wallCheckPoint;
 
         // Variables to safely pass input from Update to FixedUpdate
         private Vector2 _input;
@@ -44,13 +47,14 @@ namespace NetworkBaseRuntime
             {
                 _jumpRequested = true;
                 Debug.Log("Spacebar pressed! Jump requested.");
+                CheckGround();  
+                CheckWall();
             }
         }
 
         void FixedUpdate()
         {
-            CheckGround();
-            CheckWall();
+
             HandleMovement();
             HandleJump();
         }
@@ -94,12 +98,20 @@ namespace NetworkBaseRuntime
 
         private void CheckWall()
         {
-            isWall = Physics.Raycast(transform.position, transform.forward, wallCheckDistance, wallLayer);
+            isWall = Physics.SphereCast(wallCheckPoint.position, wallCheckDistance, transform.right, out RaycastHit hit, wallCheckDistance, wallLayer);
+            Debug.Log(hit.rigidbody != null ? $"Wall Detected: {hit.collider.name}" : "No Wall Detected");
+            Color rayColor = isGrounded ? Color.green : Color.red;
+            Debug.DrawRay(groundCheckPoint.position, Vector3.down * groundCheckDistance, rayColor);
         }
 
         private void CheckGround()
         {
-            isGrounded = Physics.Raycast(transform.position, Vector3.down, groundCheckDistance, groundLayer);
+            isGrounded = Physics.SphereCast(groundCheckPoint.position, groundCheckDistance, Vector3.down, out RaycastHit hit, groundCheckDistance, groundLayer);
+            Debug.Log(hit.rigidbody != null ? $"Ground Detected: {hit.collider.name}" : "No Ground Detected");
+            Color rayColor = isGrounded ? Color.green : Color.red;
+            Debug.DrawRay(groundCheckPoint.position, Vector3.down * groundCheckDistance, rayColor);
+
+
         }
 
         void HandleMovement()
@@ -126,6 +138,20 @@ namespace NetworkBaseRuntime
             float horizontal = Input.GetAxis("Horizontal");
             float vertical = Input.GetAxis("Vertical");
             return new Vector2(horizontal, vertical);
+        }
+
+        private void OnDrawGizmos()
+        {
+            if (groundCheckPoint != null)
+            {
+                Gizmos.color = Color.green;
+                Gizmos.DrawLine(groundCheckPoint.position, groundCheckPoint.position + Vector3.down * groundCheckDistance);
+            }
+            if (wallCheckPoint != null)
+            {
+                Gizmos.color = Color.blue;
+                Gizmos.DrawLine(wallCheckPoint.position, wallCheckPoint.position + transform.forward * wallCheckDistance);
+            }
         }
     }
 }
