@@ -571,9 +571,11 @@ GameObject:
   - component: {fileID: 1395218605}
   - component: {fileID: 1395218611}
   - component: {fileID: 1395218610}
-  - component: {fileID: 1395218609}
   - component: {fileID: 1395218608}
   - component: {fileID: 1395218612}
+  - component: {fileID: 1395218614}
+  - component: {fileID: 1395218613}
+  - component: {fileID: 1395218609}
   m_Layer: 3
   m_Name: Test Player
   m_TagString: Player
@@ -768,6 +770,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09dab2f741fcc9a428bfc992dcbe0c94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Project.Runtime::NetworkBaseRuntime.GravityController
+--- !u!114 &1395218613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1395218599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f444f8891de92a4d953baae30314a74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Project.Runtime::NetworkBaseRuntime.WallRun
+  wallRunGravity: 2
+  wallRunSpeed: 10
+  stickToWallForce: 5
+--- !u!114 &1395218614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1395218599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1b4505153092e54fab89e07c145eaf7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Project.Runtime::NetworkBaseRuntime.WallCheck
+  wallCheckDistance: 0.5
+  sphereRadius: 0.3
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!1 &1761275496
 GameObject:
   m_ObjectHideFlags: 0

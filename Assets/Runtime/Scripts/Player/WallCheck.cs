@@ -4,7 +4,8 @@ namespace NetworkBaseRuntime
 {
     public class WallCheck : MonoBehaviour
     {
-        [SerializeField] private float wallCheckDistance = 0.7f;
+        [SerializeField] private float wallCheckDistance = 0.5f;
+        [SerializeField] private float sphereRadius = 0.3f;
         [SerializeField] private LayerMask wallLayer;
 
         public bool IsWall => IsWallLeft || IsWallRight;
@@ -14,41 +15,28 @@ namespace NetworkBaseRuntime
         public RaycastHit LeftHit { get; private set; }
         public RaycastHit RightHit { get; private set; }
 
-        /// <summary>
-        /// Returns the normal of whichever wall is detected (-1 = left, 1 = right, 0 = none)
-        /// </summary>
-        public Vector3 WallNormal
-        {
-            get
-            {
-                if (IsWallRight) return RightHit.normal;
-                if (IsWallLeft) return LeftHit.normal;
-                return Vector3.zero;
-            }
-        }
+        public Vector3 WallNormal => IsWallRight ? RightHit.normal : (IsWallLeft ? LeftHit.normal : Vector3.zero);
 
         public void Check()
         {
-            IsWallRight = Physics.SphereCast(transform.position, wallCheckDistance,
+            // Right Check
+            IsWallRight = Physics.SphereCast(transform.position, sphereRadius,
                 transform.right, out RaycastHit rightHit, wallCheckDistance, wallLayer);
-
-            IsWallLeft = Physics.SphereCast(transform.position, wallCheckDistance,
-                -transform.right, out RaycastHit leftHit, wallCheckDistance, wallLayer);
-
             RightHit = rightHit;
-            LeftHit = leftHit;
 
-            if (IsWallRight) Debug.Log($"Wall on RIGHT: {RightHit.collider.name}");
-            if (IsWallLeft) Debug.Log($"Wall on LEFT: {LeftHit.collider.name}");
+            // Left Check
+            IsWallLeft = Physics.SphereCast(transform.position, sphereRadius,
+                -transform.right, out RaycastHit leftHit, wallCheckDistance, wallLayer);
+            LeftHit = leftHit;
         }
 
         private void OnDrawGizmos()
         {
-            Gizmos.color = IsWallRight ? Color.green : Color.blue;
-            Gizmos.DrawRay(transform.position, transform.right * wallCheckDistance);
+            Gizmos.color = IsWallRight ? Color.green : Color.red;
+            Gizmos.DrawWireSphere(transform.position + transform.right * wallCheckDistance, sphereRadius);
 
             Gizmos.color = IsWallLeft ? Color.green : Color.red;
-            Gizmos.DrawRay(transform.position, -transform.right * wallCheckDistance);
+            Gizmos.DrawWireSphere(transform.position - transform.right * wallCheckDistance, sphereRadius);
         }
     }
 }

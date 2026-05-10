@@ -17,14 +17,24 @@ namespace NetworkBaseRuntime
         public float JumpBuffer = 0.1f;
         public float JumpEndEarlyGravityModifier = 3f;
 
+        [Header("Wall Run")]
+        public float WallRunSpeed = 8f;           // Horizontal speed while on wall
+        public float WallRunGravity = 2f;         // Downward pull while wall running
+        public float WallStickForce = 5f;         // Force pushing player into the wall
+        public float WallJumpForce = 10f;         // Horizontal "kick" away from wall
+        public float WallJumpVerticalForce = 8f;  // Upward "kick" during wall jump
+        public LayerMask WallLayer;               // What counts as a wall?
+
         [Header("Gravity")]
         public float FallAcceleration = 50f;
         public float MaxFallSpeed = 20f;
         public float GroundingForce = -1.5f;
 
-        [Header("Collision")]
+        [Header("Collision/Detection")]
         public float GrounderDistance = 0.1f;
-        public LayerMask PlayerLayer;
+        public float WallCheckDistance = 0.5f;    // Distance for the SphereCast
+        public float WallCheckRadius = 0.3f;      // Thickness of the detection sphere
+        public LayerMask PlayerLayer;             // The player's own layer (to ignore)
 
         [Header("Input")]
         public bool SnapInput = true;

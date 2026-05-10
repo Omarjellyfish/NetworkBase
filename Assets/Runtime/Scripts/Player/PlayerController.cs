@@ -7,11 +7,17 @@ namespace NetworkBaseRuntime
     {
         [SerializeField] private PlayerStats _stats;
 
+
+        [Header("Required Components")]
         private Rigidbody _rb;
         private GroundCheck _groundCheck;
         private PlayerMovement _movement;
         private JumpController _jump;
         private GravityController _gravity;
+        private WallRun _wallRun;
+        private WallCheck _wallCheck;
+
+        public PlayerState CurrentState { get; private set; }
 
         // New Input System
         private PlayerInputActions _inputActions;
@@ -32,10 +38,16 @@ namespace NetworkBaseRuntime
             _jump = GetComponent<JumpController>();
             _gravity = GetComponent<GravityController>();
 
+            _wallRun = GetComponent<WallRun>();
+            _wallCheck = GetComponent<WallCheck>();
+
+
             _groundCheck.Init(_stats);
             _movement.Init(_stats, _groundCheck);
-            _jump.Init(_stats, _groundCheck);
+            _jump.Init(_stats, _groundCheck, _wallCheck);
             _gravity.Init(_stats, _groundCheck, _jump);
+
+            _wallRun.Init(_stats, _groundCheck, _wallCheck);
 
             // Set up input
             _inputActions = new PlayerInputActions();
@@ -85,16 +97,46 @@ namespace NetworkBaseRuntime
             _jumpDown = false;
         }
 
-        private void FixedUpdate()
+       private void FixedUpdate()
         {
+            _time += Time.fixedDeltaTime;
             _groundCheck.Check(_time);
-            Debug.Log($"[Frame] isGrounded: {_groundCheck.IsGrounded} | frameVelocity: {_frameVelocity}");
+            _wallCheck.Check(); // Added the wall check call here
+
+            UpdateState();
+
+            // Pass velocity through the pipeline
+            _frameVelocity = _rb.linearVelocity;
 
             _frameVelocity = _jump.HandleJump(_frameVelocity, _jumpHeld, _time);
             _frameVelocity = _movement.HandleDirection(_frameVelocity, _moveInput);
-            _frameVelocity = _gravity.HandleGravity(_frameVelocity);
 
+            // Only wall run if the state allows it
+            if (CurrentState == PlayerState.WallRunning)
+            {
+                _frameVelocity = _wallRun.HandleWallRun(_frameVelocity, _moveInput);
+            }
+
+            _frameVelocity = _gravity.HandleGravity(_frameVelocity);
             _rb.linearVelocity = _frameVelocity;
+        }
+        private void UpdateState()
+        {
+            if (_groundCheck.IsGrounded)
+            {
+                CurrentState = _moveInput.magnitude > 0 ? PlayerState.Walking : PlayerState.Idling;
+            }
+            else if (_wallCheck.IsWall && _moveInput.y > 0) // Must be moving forward to wall run
+            {
+                CurrentState = PlayerState.WallRunning;
+            }
+            else
+            {
+                CurrentState = PlayerState.InAir;
+            }
+
+            // Logic for animations later:
+            // _animator.SetInteger("State", (int)CurrentState);
         }
     }
 }

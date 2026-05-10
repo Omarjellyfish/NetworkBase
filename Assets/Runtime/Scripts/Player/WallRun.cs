@@ -2,41 +2,62 @@ using UnityEngine;
 
 namespace NetworkBaseRuntime
 {
-    [RequireComponent(typeof(Rigidbody))]
     public class WallRun : MonoBehaviour
     {
-        [SerializeField] private float wallRunGravity = 2f;
-        [SerializeField] private float wallRunSpeed = 6f;
-
-        private Rigidbody _rb;
-        private GroundCheck _groundCheck;
         private WallCheck _wallCheck;
+        private GroundCheck _groundCheck;
+        private PlayerStats _stats;
 
-        void Start()
+        public bool IsWallRunning { get; private set; }
+
+        public void Init(PlayerStats stats, GroundCheck groundCheck, WallCheck wallCheck)
         {
-            _rb = GetComponent<Rigidbody>();
-            _groundCheck = GetComponent<GroundCheck>();
-            _wallCheck = GetComponent<WallCheck>();
+            _stats = stats;
+            _groundCheck = groundCheck;
+            _wallCheck = wallCheck;
         }
 
-        public void HandleWallRun()
+        public Vector3 HandleWallRun(Vector3 frameVelocity, Vector2 input)
         {
-            if (_groundCheck.IsGrounded || !_wallCheck.IsWall) return;
+            // 1. Exit Conditions
+            // We check input.y to ensure they are holding "Forward" to maintain the run
+            if (_groundCheck.IsGrounded || !_wallCheck.IsWall || input.y <= 0)
+            {
+                IsWallRunning = false;
+                return frameVelocity;
+            }
 
-            // Counteract gravity so the player sticks to the wall
-            _rb.AddForce(Vector3.up * wallRunGravity, ForceMode.Acceleration);
+            IsWallRunning = true;
 
-            // Push player along the wall surface (forward relative to the wall)
+            // 2. Calculate Direction along the wall
+            // Uses the WallNormal from WallCheck to find the parallel vector
             Vector3 wallForward = Vector3.Cross(_wallCheck.WallNormal, Vector3.up);
 
-            // Flip direction if it's pointing backwards relative to the player
+            // Align wallForward with the direction the player is actually facing
             if (Vector3.Dot(wallForward, transform.forward) < 0)
                 wallForward = -wallForward;
 
-            _rb.AddForce(wallForward * wallRunSpeed, ForceMode.Acceleration);
+            // 3. Horizontal Velocity
+            // We use the specific WallRunSpeed from stats
+            Vector3 horizontalVel = wallForward * _stats.WallRunSpeed;
 
-            // Push player into the wall to maintain contact
-            _rb.AddForce(-_wallCheck.WallNormal * 10f, ForceMode.Acceleration);
+            // 4. Vertical Velocity (The "Anti-Gravity" Feel)
+            float verticalVel = frameVelocity.y;
+
+            // If we just started wall running or are falling too fast, 
+            // we snap the vertical velocity to a manageable "slide" speed
+            if (verticalVel < -2f)
+                verticalVel = -2f;
+
+            // Apply the lighter wall gravity from stats
+            verticalVel += _stats.WallRunGravity * Time.fixedDeltaTime;
+
+            // 5. Stick Velocity
+            // Pushes the player slightly INTO the wall so the SphereCast doesn't lose contact
+            Vector3 stickVel = -_wallCheck.WallNormal * _stats.WallStickForce;
+
+            // Return the combined vector
+            return new Vector3(horizontalVel.x, verticalVel, horizontalVel.z) + stickVel;
         }
     }
 }

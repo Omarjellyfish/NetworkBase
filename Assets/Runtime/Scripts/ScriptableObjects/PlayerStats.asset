@@ -12,18 +12,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a6549677d1848745ba41952148528db, type: 3}
   m_Name: PlayerStats
   m_EditorClassIdentifier: Project.Runtime::NetworkBaseRuntime.PlayerStats
-  MaxSpeed: 30
-  Acceleration: 60
+  MaxSpeed: 40
+  Acceleration: 70
   GroundDeceleration: 120
   AirDeceleration: 20
   JumpPower: 30
   CoyoteTime: 0.15
   JumpBuffer: 0.1
   JumpEndEarlyGravityModifier: 3
+  WallRunSpeed: 40
+  WallRunGravity: 2
+  WallStickForce: 5
+  WallJumpForce: 10
+  WallJumpVerticalForce: 8
+  WallLayer:
+    serializedVersion: 2
+    m_Bits: 128
   FallAcceleration: 50
   MaxFallSpeed: 20
   GroundingForce: -1.5
   GrounderDistance: 0.1
+  WallCheckDistance: 0.5
+  WallCheckRadius: 0.3
   PlayerLayer:
     serializedVersion: 2
     m_Bits: 8
