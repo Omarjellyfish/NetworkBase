@@ -40,5 +40,9 @@ namespace NetworkBaseRuntime
         public bool SnapInput = true;
         public float HorizontalDeadZoneThreshold = 0.1f;
         public float VerticalDeadZoneThreshold = 0.1f;
+
+        [Header("Look / Camera")]
+        public float MouseSensitivity = 25f;
+        public float UpAndDownClamp = 85f; // Prevents looking past straight up/down
     }
 }

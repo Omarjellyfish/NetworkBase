@@ -2,10 +2,10 @@ namespace NetworkBaseRuntime
 {
     public enum PlayerState
     {
-        Idling,
-        Walking,
-        Sprinting,
-        InAir,
-        WallRunning
+        Idling=0,
+        Walking=1,
+        Sprinting=2,
+        InAir=3,
+        WallRunning=4
     }
 }

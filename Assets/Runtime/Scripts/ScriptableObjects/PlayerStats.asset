@@ -23,7 +23,7 @@ MonoBehaviour:
   WallRunSpeed: 40
   WallRunGravity: 2
   WallStickForce: 5
-  WallJumpForce: 10
+  WallJumpForce: 30
   WallJumpVerticalForce: 8
   WallLayer:
     serializedVersion: 2
