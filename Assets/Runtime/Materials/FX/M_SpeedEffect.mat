@@ -100,7 +100,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _AddPrecomputedVelocity: 0
-    - _Alpha: 0.5
+    - _Alpha: 0
     - _AlphaClip: 0
     - _AlphaToMask: 0
     - _Blend: 0
@@ -118,7 +118,7 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _Mask_Size: 0.6
+    - _Mask_Size: 1
     - _Mast_Contrast: 0.8
     - _Metallic: 0
     - _OcclusionStrength: 1
@@ -128,7 +128,7 @@ Material:
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _Speed: 3
+    - _Speed: 0
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
