@@ -9,27 +9,41 @@ namespace NetworkBaseRuntime
         [SerializeField] private Rigidbody _rb;
         [SerializeField] private PlayerStats _stats;
 
-        [Header("Intensity Settings")]
-        [SerializeField] private float _lerpSpeed = 1f;
-        [Range(0, 1)][SerializeField] private float _minVisibleSpeedPercent = 0.5f;
+        [Header("Effect Settings")]
+        [Tooltip("How fast the shader effect ramps up when accelerating")]
+        [SerializeField] private float _lerpSpeedUp = 5f;
 
-        [Header("Alpha Settings")]
-        [Tooltip("Speed percentage below which Alpha stays at 1")]
-        [Range(0, 1)][SerializeField] private float _alphaThresholdPercent = 0.2f;
-        [Tooltip("The lowest alpha value reached when at max speed")]
-        [Range(0, 1)][SerializeField] private float _minAlphaValue = 0.5f;
+        [Tooltip("How fast the shader effect fades out when decelerating")]
+        [SerializeField] private float _lerpSpeedDown = 2f;
 
-        [Header("Mask Size Fine Tuning")]
-        [Tooltip("X = Speed (0-1), Y = Mask Size Value")]
-        [SerializeField] private AnimationCurve _maskSizeCurve = AnimationCurve.Linear(0, 1, 1, 0.5f);
+        [Tooltip("The shader's Speed value when the vehicle is at MaxSpeed")]
+        [SerializeField] private float _maxShaderSpeed = 2f;
+
+        [Header("Visibility Tuning")]
+        [Tooltip("Speeds below this will be treated as absolute zero to prevent physics jitter.")]
+        [SerializeField] private float _speedDeadzone = 0.1f;
+
+        [Tooltip("Mask size when stopped. Set higher than 1 (e.g., 1.5) to guarantee invisibility.")]
+        [SerializeField] private float _idleMaskSize = 1.5f;
+
+        [Tooltip("Mask size when going at MaxSpeed.")]
+        [SerializeField] private float _maxSpeedMaskSize = 0.7f;
+
+        [Header("Color Settings")]
+        [Tooltip("Color of the effect when stopped.")]
+        [ColorUsage(showAlpha: true, hdr: true)]
+        [SerializeField] private Color _idleColor = new Color(1f, 1f, 1f, 0f); // Defaults to transparent white
+
+        [Tooltip("Color of the effect when at MaxSpeed.")]
+        [ColorUsage(showAlpha: true, hdr: true)]
+        [SerializeField] private Color _maxSpeedColor = Color.white;
 
         // Property IDs
         private static readonly int SpeedProp = Shader.PropertyToID("_Speed");
-        private static readonly int AlphaProp = Shader.PropertyToID("_Alpha");
-        private static readonly int MaskSizeProp = Shader.PropertyToID("_Mask_Size");
+        private static readonly int MaskSizeProp = Shader.PropertyToID("_MaskSize");
+        private static readonly int SpeedColorEffectProp = Shader.PropertyToID("_SpeedColorEffect");
 
-        private float _currentIntensity;
-        private float _currentAlpha = 1f; // Tracked separately for smooth lerping
+        private float _currentNormalizedSpeed;
 
         private void Update()
         {
@@ -38,42 +52,47 @@ namespace NetworkBaseRuntime
             // 1. Calculate horizontal speed
             float horizontalSpeed = new Vector3(_rb.linearVelocity.x, 0, _rb.linearVelocity.z).magnitude;
 
-            // 2. Normalize intensity (0 to 1) for _Speed and Mask Size
-            float targetIntensity = Mathf.InverseLerp(_stats.MaxSpeed * _minVisibleSpeedPercent, _stats.MaxSpeed, horizontalSpeed);
-            _currentIntensity = Mathf.Lerp(_currentIntensity, targetIntensity, Time.deltaTime * _lerpSpeed);
-
-            // 3. Calculate Alpha (1 below threshold, decreasing to min alpha towards max speed)
-            float alphaThresholdSpeed = _stats.MaxSpeed * _alphaThresholdPercent;
-            float targetAlpha = 1f; // Default to full opacity
-
-            if (horizontalSpeed > alphaThresholdSpeed)
+            // Deadzone check. If we are barely moving, force speed to 0.
+            if (horizontalSpeed < _speedDeadzone)
             {
-                // Calculate progress from the threshold (0) up to MaxSpeed (1)
-                float alphaProgress = Mathf.InverseLerp(alphaThresholdSpeed, _stats.MaxSpeed, horizontalSpeed);
-
-                // Map that 0-1 progress to our 1.0 -> 0.5 alpha range
-                targetAlpha = Mathf.Lerp(1f, _minAlphaValue, alphaProgress);
+                horizontalSpeed = 0f;
             }
 
-            // Smoothly lerp the current alpha toward the target
-            _currentAlpha = Mathf.Lerp(_currentAlpha, targetAlpha, Time.deltaTime * _lerpSpeed);
+            // 2. Get normalized speed (0 at standstill, 1 at MaxSpeed)
+            float targetNormalizedSpeed = Mathf.InverseLerp(0f, _stats.MaxSpeed, horizontalSpeed);
 
-            // 4. Apply to Shader
-            _effectMaterial.SetFloat(SpeedProp, _currentIntensity);
-            _effectMaterial.SetFloat(AlphaProp, _currentAlpha);
+            // 3. Determine which lerp speed to use based on whether we are speeding up or slowing down
+            float activeLerpSpeed = targetNormalizedSpeed > _currentNormalizedSpeed ? _lerpSpeedUp : _lerpSpeedDown;
 
-            // 5. Handle Mask Size via Curve
-            float evaluatedMaskSize = _maskSizeCurve.Evaluate(_currentIntensity);
-            _effectMaterial.SetFloat(MaskSizeProp, evaluatedMaskSize);
+            // 4. Smooth the transition using the chosen lerp speed
+            _currentNormalizedSpeed = Mathf.Lerp(_currentNormalizedSpeed, targetNormalizedSpeed, Time.deltaTime * activeLerpSpeed);
+
+            // Force _currentNormalizedSpeed to exactly 0 if it gets extremely close, 
+            // bypassing the asymptotic tail of Mathf.Lerp
+            if (_currentNormalizedSpeed < 0.001f)
+            {
+                _currentNormalizedSpeed = 0f;
+            }
+
+            // 5. Calculate Shader Values
+            float currentMaskSize = Mathf.Lerp(_idleMaskSize, _maxSpeedMaskSize, _currentNormalizedSpeed);
+            float currentShaderSpeed = Mathf.Lerp(0f, _maxShaderSpeed, _currentNormalizedSpeed);
+            Color currentShaderColor = Color.Lerp(_idleColor, _maxSpeedColor, _currentNormalizedSpeed);
+
+            // 6. Apply to Shader
+            _effectMaterial.SetFloat(SpeedProp, currentShaderSpeed);
+            _effectMaterial.SetFloat(MaskSizeProp, currentMaskSize);
+            _effectMaterial.SetColor(SpeedColorEffectProp, currentShaderColor);
         }
 
         private void OnDisable()
         {
             if (_effectMaterial != null)
             {
-                _effectMaterial.SetFloat(SpeedProp, 0);
-                _effectMaterial.SetFloat(AlphaProp, 1); // Reset alpha to fully visible
-                _effectMaterial.SetFloat(MaskSizeProp, _maskSizeCurve.Evaluate(0));
+                // Reset to default
+                _effectMaterial.SetFloat(SpeedProp, 0f);
+                _effectMaterial.SetFloat(MaskSizeProp, _idleMaskSize);
+                _effectMaterial.SetColor(SpeedColorEffectProp, _idleColor);
             }
         }
     }
