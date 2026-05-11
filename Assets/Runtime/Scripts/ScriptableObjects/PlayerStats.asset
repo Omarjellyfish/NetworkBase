@@ -24,7 +24,7 @@ MonoBehaviour:
   WallRunGravity: 2
   WallStickForce: 5
   WallJumpForce: 30
-  WallJumpVerticalForce: 8
+  WallJumpVerticalForce: 19
   WallLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -40,3 +40,5 @@ MonoBehaviour:
   SnapInput: 1
   HorizontalDeadZoneThreshold: 0.1
   VerticalDeadZoneThreshold: 0.1
+  MouseSensitivity: 25
+  UpAndDownClamp: 85

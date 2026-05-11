@@ -277,6 +277,7 @@ namespace NetworkBaseNetwork
                 catch (LobbyServiceException e)
                 {
                     Debug.LogError($"Failed to delete lobby: {e.Message}");
+                    Debug.LogError($"Failed to delete lobby: {e.Reason}");
                 }
             }
         }
