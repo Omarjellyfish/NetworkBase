@@ -6,6 +6,7 @@ namespace NetworkBaseRuntime
         Walking=1,
         Sprinting=2,
         InAir=3,
-        WallRunning=4
+        WallRunning=4,
+        LedgeGrabbing=5,
     }
 }

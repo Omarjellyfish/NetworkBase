@@ -27,12 +27,12 @@ namespace NetworkBaseNetwork
         public static event Action<Lobby> OnLobbyCreated;
         public static event Action<Lobby> OnLobbyJoined;
         public static event Action<List<Lobby>> OnLobbyListUpdated;
-        public static event Action<Lobby> OnLobbyUpdated; 
+        public static event Action<Lobby> OnLobbyUpdated;
         public static event Action OnLeftLobby;
         public static event Action<string> OnPlayerKicked;
 
         private bool isInitialized = false;
-        private void Awake() 
+        private void Awake()
         {
             if (Singleton != null && Singleton != this)
             {
@@ -244,7 +244,15 @@ namespace NetworkBaseNetwork
             }
             catch (LobbyServiceException e)
             {
-                Debug.LogError($"Failed to quick join lobby: {e.Message}");
+                if (e.Reason == LobbyExceptionReason.NoOpenLobbies)
+                {
+                    Debug.Log("No open lobbies found...");
+
+                }
+                else
+                {
+                    Debug.LogError($"Failed to quick join lobby: {e.Message}");
+                }
             }
         }
         public async Task JoinLobbyByCode(string lobbyCode)

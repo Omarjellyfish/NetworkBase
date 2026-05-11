@@ -92,9 +92,8 @@ namespace NetworkBaseRuntime
                 Debug.Log($"Mapped UGS ID {clientUgsId} to Netcode ID {request.ClientNetworkId}");
             }
 
-            // You must set these to true to allow the player to join!
             response.Approved = true;
-            response.CreatePlayerObject = true;
+            response.CreatePlayerObject = false; // False for manual spawning
         }
     }
 }

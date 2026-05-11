@@ -14,7 +14,7 @@ namespace NetworkBaseRuntime
 
         // UI Elements
         private Button _btnHost;
-        private Button _btnRefresh; 
+        private Button _btnRefresh;
         private VisualElement _lobbyListContainer;
 
         // Overlay and Join Code Elements
@@ -41,7 +41,7 @@ namespace NetworkBaseRuntime
 
             _joinCodeInput = _document.rootVisualElement.Q<TextField>("Input_JoinCode");
             _btnJoinByCode = _document.rootVisualElement.Q<Button>("Btn_JoinByCode");
-            _btnQuickJoin=_document.rootVisualElement.Q<Button>("Btn_QuickJoin");
+            _btnQuickJoin = _document.rootVisualElement.Q<Button>("Btn_QuickJoin");
 
 
             // event subscriptions
@@ -76,7 +76,7 @@ namespace NetworkBaseRuntime
             Debug.Log("UI====> Hiding Server Browser Overlay on Start.");
             if (_serverBrowserOverlay != null)
             {
-                _serverBrowserOverlay.style.display = DisplayStyle.None; 
+                _serverBrowserOverlay.style.display = DisplayStyle.None;
             }
             Debug.Log(_serverBrowserOverlay != null ? "UI====> Server Browser Overlay reference is valid." : "UI====> Server Browser Overlay reference is NULL.");
         }
@@ -98,8 +98,8 @@ namespace NetworkBaseRuntime
         {
             if (_serverBrowserOverlay != null)
             {
-                _serverBrowserOverlay.style.display = DisplayStyle.Flex; 
-                await LobbyServiceManager.Singleton.ListLobbies(); 
+                _serverBrowserOverlay.style.display = DisplayStyle.Flex;
+                await LobbyServiceManager.Singleton.ListLobbies();
             }
         }
 
@@ -107,11 +107,11 @@ namespace NetworkBaseRuntime
         {
             if (_serverBrowserOverlay != null)
             {
-                _serverBrowserOverlay.style.display = DisplayStyle.None; 
+                _serverBrowserOverlay.style.display = DisplayStyle.None;
             }
         }
 
-  
+
         private async void OnJoinByCodeClicked()
         {
             if (_joinCodeInput != null && !string.IsNullOrEmpty(_joinCodeInput.value))
@@ -125,16 +125,20 @@ namespace NetworkBaseRuntime
             }
         }
 
-        private void OnQuickJoinClicked()
+        private async void OnQuickJoinClicked()
         {
-            if(_btnQuickJoin != null)
+            if (_btnQuickJoin != null)
             {
                 _btnQuickJoin.SetEnabled(false);
                 Debug.Log("UI====> Attempting Quick Join...");
-                LobbyServiceManager.Singleton.QuickJoinLobby().ContinueWith(_ =>
+
+                await LobbyServiceManager.Singleton.QuickJoinLobby();
+
+                // Since we use await, this automatically runs on Unity's main thread
+                if (_btnQuickJoin != null)
                 {
                     _btnQuickJoin.SetEnabled(true);
-                });
+                }
             }
         }
 

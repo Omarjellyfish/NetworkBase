@@ -25,6 +25,11 @@ namespace NetworkBaseRuntime
         public float WallJumpVerticalForce = 8f;  // Upward "kick" during wall jump
         public LayerMask WallLayer;               // What counts as a wall?
 
+
+        [Header("Ledge Grab")]
+        public float LedgeClimbSpeed = 10f;
+
+
         [Header("Gravity")]
         public float FallAcceleration = 50f;
         public float MaxFallSpeed = 20f;

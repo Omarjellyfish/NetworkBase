@@ -19,6 +19,9 @@ namespace NetworkBaseNetwork
             var root = uiDocument.rootVisualElement;
 
             lobbyListView = root.Q<ListView>("LobbyList");
+            
+            // Fix NaN error: ListView needs a fixed item height to calculate scroll boundaries properly!
+            lobbyListView.fixedItemHeight = 50f;
 
             lobbyListView.makeItem = () =>
             {
