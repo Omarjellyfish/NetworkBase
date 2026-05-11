@@ -1483,6 +1483,8 @@ MonoBehaviour:
   _stats: {fileID: 11400000, guid: 511ec80a72a91da40bad7f7a4f460de5, type: 2}
   _lerpSpeed: 1
   _minVisibleSpeedPercent: 0.5
+  _alphaThresholdPercent: 0.2
+  _minAlphaValue: 0.5
   _maskSizeCurve:
     serializedVersion: 2
     m_Curve:
@@ -1662,7 +1664,7 @@ MonoBehaviour:
     OrthographicSize: 5
     NearClipPlane: 0.3
     FarClipPlane: 1000
-    Dutch: 1e-45
+    Dutch: 6.128205e-10
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
@@ -1809,7 +1811,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_Lens:
-    FieldOfView: 75.00004
+    FieldOfView: 75.00018
     OrthographicSize: 5
     NearClipPlane: 0.3
     FarClipPlane: 1000
