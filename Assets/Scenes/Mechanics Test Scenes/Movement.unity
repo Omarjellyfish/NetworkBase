@@ -1217,6 +1217,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2894493600089986584, guid: 9dcea60fd801c724d88c0177c849dc5c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -4.0870466
+      objectReference: {fileID: 0}
+    - target: {fileID: 2894493600089986584, guid: 9dcea60fd801c724d88c0177c849dc5c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3.0880003
+      objectReference: {fileID: 0}
+    - target: {fileID: 2894493600089986584, guid: 9dcea60fd801c724d88c0177c849dc5c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 11.372565
+      objectReference: {fileID: 0}
     - target: {fileID: 4131204905838793017, guid: 9dcea60fd801c724d88c0177c849dc5c, type: 3}
       propertyPath: m_Material
       value: 
@@ -1225,17 +1237,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Test Player
       objectReference: {fileID: 0}
+    - target: {fileID: 5563799219134327649, guid: 9dcea60fd801c724d88c0177c849dc5c, type: 3}
+      propertyPath: m_ChildCameras.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7315385073735252389, guid: 9dcea60fd801c724d88c0177c849dc5c, type: 3}
       propertyPath: m_ChildCameras.Array.size
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7749710983501045792, guid: 9dcea60fd801c724d88c0177c849dc5c, type: 3}
       propertyPath: m_Lens.FieldOfView
-      value: 75.00424
+      value: 75.00467
       objectReference: {fileID: 0}
     - target: {fileID: 8138993225288770865, guid: 9dcea60fd801c724d88c0177c849dc5c, type: 3}
       propertyPath: m_Lens.Dutch
-      value: 0.003293821
+      value: -14.99782
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

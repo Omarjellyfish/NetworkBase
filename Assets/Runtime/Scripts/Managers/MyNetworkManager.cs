@@ -11,9 +11,15 @@ namespace NetworkBaseRuntime
 
         private void Start()
         {
+            Debug.Log("[MyNetworkManager] Start() called.");
             if (NetworkManager.Singleton != null)
             {
                 NetworkManager.Singleton.OnServerStarted += ServerHasStarted;
+                Debug.Log("[MyNetworkManager] Subscribed to OnServerStarted.");
+            }
+            else
+            {
+                Debug.LogError("[MyNetworkManager] NetworkManager.Singleton is NULL in Start()!");
             }
         }
 
@@ -25,10 +31,9 @@ namespace NetworkBaseRuntime
             }
         }
 
-
-
         private void ServerHasStarted()
         {
+            Debug.Log($"[MyNetworkManager] ServerHasStarted() — Loading scene '{targetSceneName}'");
             NetworkManager.Singleton.SceneManager.LoadScene(targetSceneName, LoadSceneMode.Single);
         }
     }

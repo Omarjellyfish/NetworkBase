@@ -29,34 +29,36 @@ namespace NetworkBaseRuntime
 
         private void HandleLobbyCreated(Lobby lobby)
         {
-            Debug.Log("LobbyToNetwork (Runtime): Lobby created, starting NGO as Host.");
+            Debug.Log("LobbyToNetwork (Local): Lobby created, starting NGO as Host.");
 
-
+            // 1. Setup connection approval to map IDs
             NetworkManager.Singleton.ConnectionApprovalCallback = ApprovalCheck;
-
             ugsToNetcodeMap.Clear();
 
+            // 2. Start the Host locally (defaults to 127.0.0.1)
             NetworkManager.Singleton.StartHost();
         }
 
         private void HandleLobbyJoined(Lobby lobby)
         {
-            Debug.Log("LobbyToNetwork (Runtime): Lobby joined, starting NGO as Client.");
+            // CRITICAL: Prevent the Host from also trying to start a client 
+            // when they join the lobby they just created.
+            if (lobby.HostId == AuthenticationService.Instance.PlayerId) return;
 
-            // 2. Package the Client's UGS Player ID to send to the Host
+            Debug.Log("LobbyToNetwork (Local): Lobby joined, starting NGO as Client.");
+
+            // 1. Package the Client's UGS Player ID to send to the Host
             string myUgsId = AuthenticationService.Instance.PlayerId;
             byte[] payload = System.Text.Encoding.UTF8.GetBytes(myUgsId);
-
             NetworkManager.Singleton.NetworkConfig.ConnectionData = payload;
 
+            // 2. Start the Client locally (defaults to looking for 127.0.0.1)
             NetworkManager.Singleton.StartClient();
         }
 
         private void HandleLeftLobby()
         {
-            Debug.Log("LobbyToNetwork (Runtime): Left lobby, shutting down NGO.");
-
-
+            Debug.Log("LobbyToNetwork (Local): Left lobby, shutting down NGO.");
             NetworkManager.Singleton.Shutdown();
         }
 
@@ -66,14 +68,9 @@ namespace NetworkBaseRuntime
             {
                 if (ugsToNetcodeMap.TryGetValue(kickedUgsId, out ulong netcodeClientId))
                 {
-                    Debug.Log($"LobbyToNetwork (Runtime): Disconnecting Netcode Client ID {netcodeClientId}");
+                    Debug.Log($"LobbyToNetwork (Local): Disconnecting Netcode Client ID {netcodeClientId}");
                     NetworkManager.Singleton.DisconnectClient(netcodeClientId);
-
                     ugsToNetcodeMap.Remove(kickedUgsId);
-                }
-                else
-                {
-                    Debug.LogWarning("Tried to kick a player from Netcode, but their ID wasn't in the map!");
                 }
             }
         }
@@ -93,7 +90,9 @@ namespace NetworkBaseRuntime
             }
 
             response.Approved = true;
-            response.CreatePlayerObject = false; // False for manual spawning
+
+            // False because your SpawnManager is going to handle spawning the physical player object!
+            response.CreatePlayerObject = false;
         }
     }
 }

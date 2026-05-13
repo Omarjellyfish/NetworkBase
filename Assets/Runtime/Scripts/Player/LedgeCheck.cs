@@ -7,7 +7,8 @@ namespace NetworkBaseRuntime
         [SerializeField] private Transform _ledgeCheckPoint;
         [SerializeField] private float LedgeCheckDistance = 1f;
         [SerializeField] private Vector3 boxCastSize = new Vector3(0.5f, 0.5f, 0.5f);
-
+        [SerializeField] private float RayCastInterval = 0.4f;
+        [SerializeField] private float ledgeCheckHeight = 2f;
         public bool IsLedge { get; private set; }
         void Check()
         {

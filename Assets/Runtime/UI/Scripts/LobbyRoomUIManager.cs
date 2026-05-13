@@ -88,6 +88,8 @@ namespace NetworkBaseRuntime
             foreach (Player player in currentLobby.Players)
             {
                 VisualElement playerRow = new VisualElement();
+
+                _playerListContainer.Add(playerRow);
                 // Apply the USS class to the row
                 playerRow.AddToClassList("player-item");
 
@@ -99,7 +101,7 @@ namespace NetworkBaseRuntime
                 {
                     Button kickButton = new Button();
                     kickButton.text = "Kick";
-
+                    kickButton.AddToClassList("kick-button");
                     string playerToKick = player.Id;
                     kickButton.clicked += async () =>
                     {

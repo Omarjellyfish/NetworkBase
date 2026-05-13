@@ -407,9 +407,9 @@ GameObject:
   - component: {fileID: 8231034762501085748}
   - component: {fileID: 7921792089034897693}
   - component: {fileID: 950435655544782857}
-  - component: {fileID: 8753985739059442304}
   - component: {fileID: 3715256133175403527}
   - component: {fileID: 2395966363820899871}
+  - component: {fileID: 8753985739059442304}
   - component: {fileID: 7880510881214719625}
   m_Layer: 3
   m_Name: Test Player
@@ -682,6 +682,33 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
+--- !u!114 &3715256133175403527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4333997285556035139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9c07e3e561e3a34abbd7e7c02dc4f5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Project.Runtime::NetworkBaseRuntime.LedgeClimbing
+--- !u!114 &2395966363820899871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4333997285556035139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22463bce7f1920e4887d798480e197c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Project.Runtime::NetworkBaseRuntime.LedgeCheck
+  _ledgeCheckPoint: {fileID: 0}
+  LedgeCheckDistance: 1
+  boxCastSize: {x: 0.5, y: 0.5, z: 0.5}
 --- !u!114 &8753985739059442304
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -728,30 +755,6 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &3715256133175403527
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4333997285556035139}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9c07e3e561e3a34abbd7e7c02dc4f5e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Project.Runtime::NetworkBaseRuntime.LedgeClimbing
---- !u!114 &2395966363820899871
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4333997285556035139}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22463bce7f1920e4887d798480e197c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Project.Runtime::NetworkBaseRuntime.LedgeCheck
 --- !u!114 &7880510881214719625
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,5 +1,6 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/Runtime/UI%20Toolkit/USS/MainMenuStyle.uss?fileID=7433441132597879392&amp;guid=db8e06c67569f7041832dc4748fbb8a9&amp;type=3#MainMenuStyle"/>
+    <Style src="project://database/Assets/Runtime/UI%20Toolkit/USS/MinorStyles.uss?fileID=7433441132597879392&amp;guid=7eb05d9e7c7c70541a018a7a6ebdaf84&amp;type=3#MinorStyles"/>
     <ui:VisualElement style="flex-grow: 1;">
         <ui:Button text="Start Game" name="Btn_StartGame" class="button"/>
         <ui:Button text="Leave Lobby" name="Btn_LeaveLobby" class="button"/>
