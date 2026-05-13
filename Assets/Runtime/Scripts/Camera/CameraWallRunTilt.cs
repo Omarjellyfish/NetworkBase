@@ -7,7 +7,9 @@ namespace NetworkBaseRuntime
     {
         [Header("References")]
         [SerializeField] private CinemachineVirtualCamera _vCam;
-        [SerializeField] private WallCheck _wallCheck;
+        private WallCheck _wallCheck;
+
+        public void SetWallCheck(WallCheck wallCheck) => _wallCheck = wallCheck;
 
         [Header("Tilt Settings")]
         [SerializeField] private float _tiltAngle = 15f; // How extreme the tilt is

@@ -44,9 +44,18 @@ namespace NetworkBaseRuntime
         private static readonly int SpeedColorEffectProp = Shader.PropertyToID("_SpeedColorEffect");
 
         private float _currentNormalizedSpeed;
+        private PlayerInputHandler _inputHandler;
+
+        private void Awake()
+        {
+            _inputHandler = GetComponent<PlayerInputHandler>();
+        }
 
         private void Update()
         {
+            // Only run on the locally owned player — prevents both instances
+            // writing to the same shared material
+            if (!_inputHandler.enabled) return;
             if (_effectMaterial == null || _rb == null || _stats == null) return;
 
             // 1. Calculate horizontal speed

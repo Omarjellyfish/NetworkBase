@@ -20,7 +20,7 @@
             </ui:VisualElement>
             <ui:VisualElement name="ServerBrowserOverlay" class="server-list-container" style="flex-grow: 1;">
                 <ui:Label text="Available Lobbies" name="Avail_Lobbies" style="font-size: 32px;"/>
-                <ui:Button text="Close Server List" name="Btn_CloseBrowser" class="button" style="position: relative; left: 60%; top: 0%; right: auto;"/>
+                <ui:Button text="Close Server List" name="Btn_CloseBrowser" class="button" style="position: relative; left: 40%; top: auto; right: auto; bottom: 30%;"/>
                 <ui:ScrollView name="LobbyListContainer" style="flex-grow: 1; width: 70%; height: 70%;"/>
                 <ui:Button text="Refresh list" name="Btn_RefreshLobbies" class="button"/>
             </ui:VisualElement>

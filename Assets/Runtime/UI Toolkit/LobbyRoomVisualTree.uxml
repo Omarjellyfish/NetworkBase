@@ -4,6 +4,6 @@
     <ui:VisualElement style="flex-grow: 1;">
         <ui:Button text="Start Game" name="Btn_StartGame" class="button"/>
         <ui:Button text="Leave Lobby" name="Btn_LeaveLobby" class="button"/>
-        <ui:ScrollView name="PlayerListContainer" class="server-list-container"/>
+        <ui:ScrollView name="PlayerListContainer" class="server-list-container" style="left: 10%;"/>
     </ui:VisualElement>
 </ui:UXML>

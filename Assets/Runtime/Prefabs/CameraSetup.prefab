@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 1184865702630108889}
   serializedVersion: 2
   m_LocalRotation: {x: -0.000000086271776, y: 0.00000008736949, z: -0.00000002083978, w: 1}
-  m_LocalPosition: {x: 0, y: -0.000000059604645, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -86,7 +86,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Project.Runtime::NetworkBaseRuntime.CameraWallRunTilt
   _vCam: {fileID: 6541149634049150984}
-  _wallCheck: {fileID: 0}
   _tiltAngle: 15
   _tiltSpeed: 6
 --- !u!1 &1877948747345067713
@@ -116,7 +115,7 @@ Transform:
   m_GameObject: {fileID: 1877948747345067713}
   serializedVersion: 2
   m_LocalRotation: {x: -0.000000086271776, y: 0.00000008736949, z: -0.00000002083978, w: 1}
-  m_LocalPosition: {x: 0, y: -0.000000059604645, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -175,7 +174,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Project.Runtime::NetworkBaseRuntime.CameraFovScaler
   _vCam: {fileID: 8468523227061180166}
-  _playerRb: {fileID: 0}
   _stats: {fileID: 11400000, guid: 511ec80a72a91da40bad7f7a4f460de5, type: 2}
   _minFov: 75
   _maxFov: 90
@@ -205,7 +203,7 @@ Transform:
   m_GameObject: {fileID: 1954797928330030999}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8.466283, y: -11.81419, z: 12.424315}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -317,7 +315,7 @@ Transform:
   m_GameObject: {fileID: 2931000507966129698}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8.466283, y: -11.81419, z: 12.424315}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -404,6 +402,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1770459514640535914}
+  - component: {fileID: 145043112622682560}
   m_Layer: 0
   m_Name: CameraSetup
   m_TagString: Untagged
@@ -420,7 +419,7 @@ Transform:
   m_GameObject: {fileID: 3007595493098820387}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -9.25641, y: 14.90219, z: -13.01748}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -429,6 +428,21 @@ Transform:
   - {fileID: 6470243457215362317}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &145043112622682560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3007595493098820387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 751dfe46fe1708f44906557ba383020e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Project.Runtime::NetworkBaseRuntime.AttachCameraToPlayer
+  _stateDrivenCamera: {fileID: 4384033622248933492}
+  _fovScaler: {fileID: 7033409841608253159}
+  _wallRunTilt: {fileID: 2445457637493570059}
 --- !u!1 &4659272933661412887
 GameObject:
   m_ObjectHideFlags: 0
@@ -589,7 +603,7 @@ Transform:
   m_GameObject: {fileID: 6870391053651061644}
   serializedVersion: 2
   m_LocalRotation: {x: -0.0000000037227637, y: 8.779033e-18, z: -5.7986354e-19, w: 1}
-  m_LocalPosition: {x: 0, y: -0.000000059604645, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -664,7 +678,7 @@ Transform:
   m_GameObject: {fileID: 6967504084617334495}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8.466283, y: -11.81419, z: 12.424315}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

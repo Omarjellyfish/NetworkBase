@@ -5,8 +5,10 @@ using Cinemachine;
     public class CameraFovScaler : MonoBehaviour
     {
         [SerializeField] private CinemachineVirtualCamera _vCam;
-        [SerializeField] private Rigidbody _playerRb;
-        [SerializeField] private PlayerStats _stats; // Injecting your stats here!
+        [SerializeField] private PlayerStats _stats;
+        private Rigidbody _playerRb;
+
+        public void SetPlayerRigidbody(Rigidbody rb) => _playerRb = rb;
 
         [Header("FOV Settings")]
         [SerializeField] private float _minFov = 60f;
