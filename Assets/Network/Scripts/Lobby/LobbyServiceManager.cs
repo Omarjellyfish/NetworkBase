@@ -139,7 +139,9 @@ namespace NetworkBaseNetwork
             }
             catch (Exception e)
             {
-                Debug.LogError($"Polling Error: {e.Message}");
+                // Downgrade to warning: this is often just internal SDK network jitter
+                // or cancellation when leaving play mode. The polling will safely retry.
+                Debug.LogWarning($"Lobby Polling Jitter/Error: {e.Message}");
             }
         }
         public void StopPolling()

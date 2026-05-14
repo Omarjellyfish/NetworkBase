@@ -26,6 +26,7 @@ namespace NetworkBaseRuntime
 
         private Vector3 _frameVelocity;
         private float _time;
+
         private bool _isCameraAnimatorCached;
 
         private void Awake()

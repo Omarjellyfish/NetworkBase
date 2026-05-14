@@ -28,6 +28,7 @@ MonoBehaviour:
   WallLayer:
     serializedVersion: 2
     m_Bits: 128
+  LedgeClimbSpeed: 10
   FallAcceleration: 50
   MaxFallSpeed: 20
   GroundingForce: -1.5
