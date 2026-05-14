@@ -86,7 +86,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Project.Runtime::NetworkBaseRuntime.CameraWallRunTilt
   _vCam: {fileID: 8138993225288770865}
-  _wallCheck: {fileID: 7702030503316597400}
   _tiltAngle: 15
   _tiltSpeed: 6
 --- !u!1 &2145093715898912702
@@ -381,7 +380,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Project.Runtime::NetworkBaseRuntime.CameraFovScaler
   _vCam: {fileID: 7749710983501045792}
-  _playerRb: {fileID: 5537921805149979411}
   _stats: {fileID: 11400000, guid: 511ec80a72a91da40bad7f7a4f460de5, type: 2}
   _minFov: 75
   _maxFov: 90
@@ -558,6 +556,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Project.Runtime::NetworkBaseRuntime.GroundCheck
   feet: {fileID: 231325020430269497}
+  debugSphereRadius: 0.1
 --- !u!114 &5973613301300927153
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -670,7 +669,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 582598163
+  GlobalObjectIdHash: 2228527587
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -771,7 +770,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Project.Runtime::NetworkBaseRuntime.PlayerController
   _stats: {fileID: 11400000, guid: 511ec80a72a91da40bad7f7a4f460de5, type: 2}
-  _cameraAnimator: {fileID: 957117820540950433}
   _cameraRoot: {fileID: 2063359394927108264}
 --- !u!114 &4766615984228399741
 MonoBehaviour:
@@ -1223,7 +1221,10 @@ MonoBehaviour:
   m_AnimatedTarget: {fileID: 957117820540950433}
   m_LayerIndex: 0
   m_ShowDebugText: 0
-  m_ChildCameras: []
+  m_ChildCameras:
+  - {fileID: 8397753437732709462}
+  - {fileID: 7749710983501045792}
+  - {fileID: 8138993225288770865}
   m_Instructions:
   - m_FullHash: -397766897
     m_VirtualCamera: {fileID: 8397753437732709462}

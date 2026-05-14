@@ -15,7 +15,7 @@ namespace NetworkBaseRuntime
         private CapsuleCollider _col;
         private PlayerStats _stats;
         [SerializeField] Transform feet;
-
+        [SerializeField] float debugSphereRadius = 0.1f;
         public void Init(PlayerStats stats)
         {
             _col = GetComponent<CapsuleCollider>();
@@ -24,15 +24,16 @@ namespace NetworkBaseRuntime
 
         public void Check(float time)
         {
-            // Build capsule points for cast
-            Vector3 center = _col.bounds.center;
-            float halfHeight = _col.height / 2f - _col.radius;
-            Vector3 p1 = center + Vector3.up * halfHeight;
-            Vector3 p2 = center - Vector3.up * halfHeight;
             int mask = ~_stats.PlayerLayer;
 
-            bool groundHit = Physics.CapsuleCast(feet.position, p2, _col.radius, Vector3.down, _stats.GrounderDistance, mask);
-            bool ceilingHit = Physics.CapsuleCast(feet.position, p2, _col.radius, Vector3.up, _stats.GrounderDistance, mask);
+            // Small, accurate SphereCast at the feet
+            // Start slightly above the feet to prevent casting from inside the floor
+            Vector3 groundOrigin = feet.position + (Vector3.up * debugSphereRadius);
+            bool groundHit = Physics.SphereCast(groundOrigin, debugSphereRadius, Vector3.down, out _, debugSphereRadius + _stats.GrounderDistance, mask);
+
+            // Small, accurate SphereCast at the head
+            Vector3 headOrigin = _col.bounds.center + Vector3.up * (_col.height / 2f - debugSphereRadius);
+            bool ceilingHit = Physics.SphereCast(headOrigin, debugSphereRadius, Vector3.up, out _, debugSphereRadius + _stats.GrounderDistance, mask);
 
             HitCeiling = ceilingHit;
 
@@ -51,9 +52,17 @@ namespace NetworkBaseRuntime
 
         private void OnDrawGizmos()
         {
-            if (_col == null) return;
+            if (feet == null || _col == null) return;
+            
+            // Ground cast gizmo
             Gizmos.color = IsGrounded ? Color.green : Color.red;
-            Gizmos.DrawWireSphere(_col.bounds.center + Vector3.down * (_col.height / 2f), _col.radius);
+            
+            Vector3 groundOrigin = feet.position + (Vector3.up * debugSphereRadius);
+            float castDistance = _stats != null ? _stats.GrounderDistance : 0.1f;
+            Vector3 groundEnd = groundOrigin + Vector3.down * (debugSphereRadius + castDistance);
+            
+            Gizmos.DrawWireSphere(groundOrigin, debugSphereRadius);
+            Gizmos.DrawWireSphere(groundEnd, debugSphereRadius);
         }
     }
 }

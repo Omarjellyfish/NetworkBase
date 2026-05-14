@@ -158,5 +158,19 @@ namespace NetworkBaseRuntime
                 CurrentState = PlayerState.InAir;
             }
         }
+
+#if UNITY_EDITOR
+        private void OnGUI()
+        {
+            if (!Application.isPlaying || !_inputHandler.enabled) return;
+
+            GUIStyle style = new GUIStyle();
+            style.normal.textColor = Color.green;
+            style.fontSize = 24;
+            style.fontStyle = FontStyle.Bold;
+
+            GUI.Label(new Rect(20, 20, 300, 50), $"State: {CurrentState}", style);
+        }
+#endif
     }
 }
