@@ -3,7 +3,7 @@ using UnityEngine;
 namespace NetworkBaseRuntime
 {
     [RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider))]
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : MonoBehaviour,ITargetable
     {
         [SerializeField] private PlayerStats _stats;
 
@@ -157,6 +157,18 @@ namespace NetworkBaseRuntime
             {
                 CurrentState = PlayerState.InAir;
             }
+        }
+
+
+        //for the jellyfish
+        public Transform GetTransform()
+        {
+            return transform;
+        }
+
+        public Vector3 GetVelocity()
+        {
+            return GetComponent<Rigidbody>().linearVelocity;
         }
 
 #if UNITY_EDITOR
